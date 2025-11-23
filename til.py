@@ -1,10 +1,25 @@
 #!/usr/bin/env python3
+"""til-cli: A command-line TIL (Today I Learned) diary.
+
+Track your daily learnings from the terminal. Entries are stored
+locally in ~/.til/entries.json.
+
+Usage:
+    python til.py add "learned something" --tag python
+    python til.py list --today
+    python til.py search "python"
+    python til.py delete 1
+"""
 import argparse
-import sys
 from src.commands import add_entry, list_entries, search_entries, delete_entry
 
 
-def main():
+def create_parser() -> argparse.ArgumentParser:
+    """Create and configure the argument parser.
+
+    Returns:
+        Configured ArgumentParser with all subcommands.
+    """
     parser = argparse.ArgumentParser(description="TIL - Today I Learned CLI")
     subparsers = parser.add_subparsers(dest="command", help="Comandos disponibles")
 
@@ -26,6 +41,15 @@ def main():
     delete_parser = subparsers.add_parser("delete", help="Eliminar una entrada")
     delete_parser.add_argument("id", type=int, help="ID de la entrada a eliminar")
 
+    return parser
+
+
+def main():
+    """Entry point for the TIL CLI application.
+
+    Parses command-line arguments and executes the appropriate command.
+    """
+    parser = create_parser()
     args = parser.parse_args()
 
     if args.command == "add":

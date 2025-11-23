@@ -1,9 +1,19 @@
+"""Command implementations for til-cli."""
 from datetime import datetime
 from src.models import Entry
 from src.storage import load_entries, save_entries, get_next_id
 
 
-def add_entry(content, tags=None):
+def add_entry(content: str, tags: list[str] | None = None) -> Entry:
+    """Add a new TIL entry.
+
+    Args:
+        content: The learning note to save.
+        tags: Optional list of category tags.
+
+    Returns:
+        The newly created Entry with assigned ID.
+    """
     if tags is None:
         tags = []
     entry = Entry(
@@ -18,7 +28,16 @@ def add_entry(content, tags=None):
     return entry
 
 
-def list_entries(filter_today=False, filter_tag=None):
+def list_entries(filter_today: bool = False, filter_tag: str | None = None) -> list[Entry]:
+    """List TIL entries with optional filters.
+
+    Args:
+        filter_today: If True, show only today's entries.
+        filter_tag: If provided, filter by this tag.
+
+    Returns:
+        List of Entry objects matching the filters.
+    """
     entries = load_entries()
     result = []
     for entry in entries:
@@ -38,7 +57,15 @@ def list_entries(filter_today=False, filter_tag=None):
     return result
 
 
-def search_entries(query):
+def search_entries(query: str) -> list[Entry]:
+    """Search entries by content.
+
+    Args:
+        query: Text to search for (case-insensitive).
+
+    Returns:
+        List of Entry objects containing the query string.
+    """
     entries = load_entries()
     result = []
     for entry in entries:
@@ -47,7 +74,15 @@ def search_entries(query):
     return result
 
 
-def delete_entry(entry_id):
+def delete_entry(entry_id: int) -> bool:
+    """Delete an entry by ID.
+
+    Args:
+        entry_id: The ID of the entry to delete.
+
+    Returns:
+        True if the entry was found and deleted, False otherwise.
+    """
     entries = load_entries()
     new_entries = []
     deleted = False
